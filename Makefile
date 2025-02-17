@@ -1,7 +1,7 @@
 # Makefile for deploying WireGuard ping monitor script
 
 # Variables
-SCRIPT_NAME = wg_reconnect.py
+SCRIPT_NAME = wg_ping.py
 SCRIPT_PATH = ./$(SCRIPT_NAME)  # Update this path to your script's location
 INSTALL_PATH = /usr/local/bin/$(SCRIPT_NAME)
 SYSTEMD_SERVICE_NAME = wireguard_ping.service

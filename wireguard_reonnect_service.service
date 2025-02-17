@@ -3,7 +3,7 @@ Description=WireGuard Ping Monitor
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 /path/to/your_script.py 10.8.0.1 --interface wg0
+ExecStart=/usr/bin/python3 /usr/local/bin/wg_ping.py 10.8.0.1 --interface wg0
 Restart=always
 User=root
 
