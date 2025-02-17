@@ -13,9 +13,7 @@ def parse_args():
 # Function to restart WireGuard interface
 def restart_wireguard(interface):
     print(f"Restarting WireGuard connection ({interface})...")
-    os.system(f'sudo wg-quick down {interface}')
-    time.sleep(5)
-    os.system(f'sudo wg-quick up {interface}')
+    os.system(f'sudo systemctl restart wg-quick@{interface}')
 
 def main():
     # Parse command-line arguments
