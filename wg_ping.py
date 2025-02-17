@@ -1,7 +1,7 @@
 import os
 import time
 import argparse
-from pythonping import ping
+import subprocess
 
 # Function to parse command-line arguments
 def parse_args():
@@ -15,10 +15,20 @@ def restart_wireguard(interface):
     print(f"Restarting WireGuard connection ({interface})...")
     os.system(f'sudo systemctl restart wg-quick@{interface}')
 
+# Function to check if a ping is successful
+def is_ping_successful(server_ip):
+    try:
+        result = subprocess.run(['ping', '-c', '1', '-W', '1', server_ip], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return result.returncode == 0  # Return True if ping succeeds
+    except Exception as e:
+        print(f"Ping error: {e}")
+        return False
+
 def main():
     # Parse command-line arguments
     args = parse_args()
     failed_tries = 0
+    consecutive_failures = 0
     server_ip = args.server_ip
     interface = args.interface
 
@@ -26,26 +36,25 @@ def main():
     while True:
         print('Waiting 3 seconds for the next ping...')
         time.sleep(3)
-        # Test Ping Success
-        if ping(server_ip)._responses[0].success:
-            print('Ping successful!')
-            # Reset failed tries
-            failed_tries = 0
-        else:
-            print(f'Ping failed! Restarting {interface} connection...')
-            # Restart WireGuard interface
-            restart_wireguard(interface)
-            # Increment failed tries
-            failed_tries += 1
 
-        # If more than 50 failed tries, add a 30-minute timeout
+        if is_ping_successful(server_ip):
+            print('Ping successful!')
+            consecutive_failures = 0  # Reset consecutive failures
+        else:
+            consecutive_failures += 1
+            print(f'Ping failed {consecutive_failures} times!')
+
+        # Restart only after 3 consecutive failures
+        if consecutive_failures >= 3:
+            print(f"Restarting {interface} after {consecutive_failures} failures...")
+            restart_wireguard(interface)
+            consecutive_failures = 0  # Reset counter after restart
+
+        # If more than 50 failed tries overall, wait 30 seconds before retrying
         if failed_tries >= 50:
+            print("More than 50 failed pings. Waiting 30 seconds before retrying...")
+            time.sleep(30)  # Sleep for 30 minutes
             failed_tries = 0
-            print('More than 50 failed pings. Waiting 30 seconds for next ping!')
-            # Sleep for 30 minutes
-            time.sleep(30)
-            
 
 if __name__ == '__main__':
     main()
-
