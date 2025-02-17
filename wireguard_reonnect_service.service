@@ -1,0 +1,11 @@
+[Unit]
+Description=WireGuard Ping Monitor
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /path/to/your_script.py 10.8.0.1 --interface wg0
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
