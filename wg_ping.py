@@ -44,8 +44,8 @@ def main():
             consecutive_failures += 1
             print(f'Ping failed {consecutive_failures} times!')
 
-        # Restart only after 3 consecutive failures
-        if consecutive_failures >= 3:
+        # Restart only after 10 consecutive failures
+        if consecutive_failures >= 10:
             print(f"Restarting {interface} after {consecutive_failures} failures...")
             restart_wireguard(interface)
             consecutive_failures = 0  # Reset counter after restart
