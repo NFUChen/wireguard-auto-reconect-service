@@ -26,6 +26,8 @@ def main():
 
     # Continuous pinging loop
     while True:
+        print('Waiting 5 seconds for the next ping...')
+        time.sleep(5)
         # Test Ping Success
         if ping(server_ip)._responses[0].success:
             print('Ping successful!')
@@ -41,13 +43,10 @@ def main():
         # If more than 50 failed tries, add a 30-minute timeout
         if failed_tries >= 50:
             failed_tries = 0
-            print('More than 50 failed pings. Waiting 30 minutes for next ping!')
+            print('More than 50 failed pings. Waiting 5 minutes for next ping!')
             # Sleep for 30 minutes
-            time.sleep(1800)
-        else:
-            print('Waiting 30 seconds for the next ping...')
-            # Wait 30 seconds for the next ping
-            time.sleep(30)
+            time.sleep(300)
+            
 
 if __name__ == '__main__':
     main()
