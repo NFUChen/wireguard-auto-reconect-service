@@ -3,6 +3,7 @@ Description=WireGuard Ping Monitor
 After=network.target
 
 [Service]
+EnvironmentFile=/wireguard-auto-reconect-service/wg_ping.conf
 ExecStart=/usr/bin/python3 /usr/local/bin/wg_ping.py
 Restart=always
 User=root
