@@ -3,12 +3,8 @@ import time
 import argparse
 import subprocess
 
-# Function to parse command-line arguments
-def parse_args():
-    parser = argparse.ArgumentParser(description='Ping WireGuard server and restart interface on failure.')
-    parser.add_argument('server_ip', type=str, help='The WireGuard server IP address (e.g., 10.6.0.1)')
-    parser.add_argument('--interface', type=str, default='wg0', help='WireGuard interface (default: wg0)')
-    return parser.parse_args()
+
+
 
 # Function to restart WireGuard interface
 def restart_wireguard(interface):
@@ -25,12 +21,11 @@ def is_ping_successful(server_ip):
         return False
 
 def main():
-    # Parse command-line arguments
-    args = parse_args()
+    server_ip = os.getenv("SERVER_IP")
+    interface = os.getenv("WG_INTERFACE")
+    print(f"Server IP: {server_ip}, Interface: {interface}")
     failed_tries = 0
     consecutive_failures = 0
-    server_ip = args.server_ip
-    interface = args.interface
 
     # Continuous pinging loop
     while True:
